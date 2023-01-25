@@ -6,3 +6,8 @@ EXPORTS
   XSecurityAllocXauth
   XShapeCombineMask
   XShapeQueryExtension
+  XextRemoveDisplay
+  XextFindDisplay
+  XextCreateExtension
+  XMissingExtension
+  XextAddDisplay

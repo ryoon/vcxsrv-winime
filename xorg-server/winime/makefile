@@ -1,0 +1,6 @@
+LIBRARY=libwinime
+
+DEFINES+=	-DMALLOC_0_RETURNS_NULL PIXMAN_API=
+
+CSRCS = 	\
+	winime.c

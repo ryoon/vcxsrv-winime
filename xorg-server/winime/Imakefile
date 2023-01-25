@@ -1,0 +1,30 @@
+#define DoNormalLib NormalLibWinIME
+#define DoSharedLib SharedLibWinIME
+#define DoDebugLib DebugLibWinIME
+#define DoProfileLib ProfileLibWinIME
+#define LibName WinIME
+#define SoRev SOWINIMEREV
+#define IncSubdir X11
+#define IncSubSubdir extensions
+
+#include <Threads.tmpl>
+
+#ifdef SharedWinIMEReqs
+REQUIREDLIBS = SharedWinIMEReqs
+#endif
+
+#if Malloc0ReturnsNull
+ALLOC_DEFINES = -DMALLOC_0_RETURNS_NULL
+#endif
+
+      DEFINES = $(ALLOC_DEFINES)
+     INCLUDES = -I$(XLIBSRC) -I$(EXTINCSRC)
+         SRCS = winime.c
+         OBJS = winime.o
+     LINTLIBS = $(LINTXLIB)
+
+HEADERS = winime.h winimestr.h
+
+#include <Library.tmpl>
+
+DependTarget()

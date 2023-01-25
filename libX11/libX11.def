@@ -20,6 +20,7 @@ EXPORTS
   _XLockMutex_fn_p
   _XRead
   _XReadPad
+  _XRegisterFilterByType
   _XReply
   _XSend
   _XSetLastRequestRead
@@ -28,6 +29,7 @@ EXPORTS
   _Xthread_waiter
   _XUnlockMutex_fn
   _XUnlockMutex_fn_p
+  _XUnregisterFilter
   _XVIDtoVisual
   XAddConnectionWatch
   XAddExtension

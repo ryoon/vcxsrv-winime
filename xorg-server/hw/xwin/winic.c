@@ -34,6 +34,7 @@ Author:
 #include "IMdkit/IMdkit.h"
 #include "IMdkit/Xi18n.h"
 #include "winic.h"
+#include <winmsg.h>
 
 static IMIC *ic_list = (IMIC *) NULL;
 static IMIC *free_list = (IMIC *) NULL;

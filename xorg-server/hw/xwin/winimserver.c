@@ -632,7 +632,7 @@ winImServerProc (void *pvNotUsed)
   Window pIMWindow;
   Display *pDisplay;
   int i;
-  int iRetries;
+  int iRetries = 0;
   char szTransport[80];		/* enough */
   long lFilterMask = KeyPressMask | KeyReleaseMask;
   int iIMEEventBase, iIMEErrorBase;

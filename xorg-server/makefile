@@ -27,7 +27,9 @@ INCLUDELIBFILES =  \
  xkb\$(OBJDIR)\libxkb.lib \
  render\$(OBJDIR)\librender.lib \
  present\$(OBJDIR)\libpresent.lib \
- pseudoramiX\$(OBJDIR)\libPseudoramiX.lib
+ pseudoramiX\$(OBJDIR)\libPseudoramiX.lib \
+ hw\xwin\IMdkit\$(OBJDIR)\libXimd.lib \
+ winime\$(OBJDIR)\libwinime.lib
 
 INCLUDENOSERVLIBFILES =  \
  $(MHMAKECONF)\libX11\$(NOSERVOBJDIR)\libX11.lib \
@@ -39,7 +41,10 @@ INCLUDENOSERVLIBFILES =  \
  $(MHMAKECONF)\libXfont2\$(NOSERVOBJDIR)\libXfont2.lib \
  $(MHMAKECONF)\libfontenc\src\$(NOSERVOBJDIR)\libfontenc.lib \
  $(MHMAKECONF)\libXinerama\src\$(NOSERVOBJDIR)\libXinerama.lib \
+ $(MHMAKECONF)\libXext\src\$(NOSERVOBJDIR)\libXext.lib \
  $(MHMAKECONF)\zlib\$(NOSERVOBJDIR)\zlib1.lib
+
+INCLUDES+=	winime
 
 LIBDIRS=$(dir $(INCLUDELIBFILES))
 NOSERVLIBDIRS=$(dir $(INCLUDENOSERVLIBFILES))
@@ -49,7 +54,7 @@ load_makefile $(NOSERVLIBDIRS:%$(NOSERVOBJDIR)\=%makefile MAKESERVER=0 DEBUG=$(D
 
 OBJS = dix\$(OBJDIR)\main.obj
 
-LINKLIBS += $(PTHREADLIB) $(FREETYPELIB) $(OPENSSLLIB) opengl32.lib dwmapi.lib
+LINKLIBS += $(PTHREADLIB) $(FREETYPELIB) $(OPENSSLLIB) opengl32.lib dwmapi.lib Imm32.lib
 
 ifeq ($(DEBUG),1)
 TTYAPP=vcxsrv

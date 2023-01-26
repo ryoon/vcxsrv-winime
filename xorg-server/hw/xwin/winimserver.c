@@ -37,15 +37,16 @@
 #include "IMdkit/Xi18n.h"
 #include <X11/extensions/winime.h>
 #include <pthread.h>
+#include <winmsg.h>
 
 /* Windows headers */
 #define NONAMELESSUNION
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN 1
 #endif
 
 #define ATOM DWORD
-#include <windows.h>
+#include <X11/Xwindows.h>
 
 #include "winic.h"
 

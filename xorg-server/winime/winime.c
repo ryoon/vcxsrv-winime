@@ -35,7 +35,7 @@
 #include <X11/Xlibint.h>
 #include "winimestr.h"
 #include <X11/extensions/Xext.h>
-#include "extutil.h"
+#include <X11/extensions/extutil.h>
 #include <stdio.h>
 
 static XExtensionInfo _winime_info_data;

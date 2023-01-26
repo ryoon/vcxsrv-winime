@@ -299,7 +299,7 @@ winCommitCompositionResult (int nContext, int nIndex, void *pData, int nLen)
 static Bool
 IsRoot(WindowPtr pWin)
 {
-  return pWin == WindowTable[(pWin)->drawable.pScreen->myNum];
+  return pWin == (pWin)->drawable.pScreen->root;
 }
 
 static Bool
@@ -331,8 +331,8 @@ winWinIMEExtensionInit ()
   winDebug ("%s\n", __FUNCTION__);
 #endif
 
-  ClientType = CreateNewResourceType(WinIMEFreeClient);
-  EventType = CreateNewResourceType(WinIMEFreeEvents);
+  ClientType = CreateNewResourceType(WinIMEFreeClient, "WinIMEFreeClient");
+  EventType = CreateNewResourceType(WinIMEFreeEvents, "WinIMEFreeEvents");
   eventResource = FakeClientID(0);
 
   if (ClientType && EventType &&
@@ -419,7 +419,8 @@ WinIMEFreeClient (pointer data, XID id)
 #endif
 
   pEvent = (WinIMEEventPtr) data;
-  pHead = (WinIMEEventPtr *) LookupIDByType(eventResource, EventType);
+  pHead = dixLookupResourceByType((pointer *)&pHead, eventResource, EventType,
+		  NullClient, DixUnknownAccess);
   if (pHead)
     {
       pPrev = 0;
@@ -434,7 +435,7 @@ WinIMEFreeClient (pointer data, XID id)
 	}
       updateEventMask (pHead);
     }
-  xfree ((pointer) pEvent);
+  free ((pointer) pEvent);
 
   return 1;
 }
@@ -454,9 +455,9 @@ WinIMEFreeEvents (pointer data, XID id)
     {
       pNext = pCur->next;
       FreeResource (pCur->clientResource, ClientType);
-      xfree ((pointer) pCur);
+      free ((pointer) pCur);
     }
-  xfree ((pointer) pHead);
+  free ((pointer) pHead);
   eventMask = 0;
 
   return 1;
@@ -474,9 +475,9 @@ ProcWinIMESelectInput (register ClientPtr client)
 #endif
 
   REQUEST_SIZE_MATCH (xWinIMESelectInputReq);
-  pHead = (WinIMEEventPtr *)SecurityLookupIDByType(client, eventResource,
-						   EventType,
-						   SecurityWriteAccess);
+  dixLookupResourceByType((pointer *)&pHead, eventResource,
+						   EventType, client,
+						   DixWriteAccess);
   if (stuff->mask != 0)
     {
       if (pHead)
@@ -494,7 +495,7 @@ ProcWinIMESelectInput (register ClientPtr client)
 	}
 
       /* build the entry */
-      pNewEvent = (WinIMEEventPtr) xalloc (sizeof (WinIMEEventRec));
+      pNewEvent = (WinIMEEventPtr) malloc (sizeof (WinIMEEventRec));
       if (!pNewEvent)
 	return BadAlloc;
       pNewEvent->next = 0;
@@ -516,7 +517,7 @@ ProcWinIMESelectInput (register ClientPtr client)
        */
       if (!pHead)
 	{
-	  pHead = (WinIMEEventPtr *) xalloc (sizeof (WinIMEEventRec));
+	  pHead = (WinIMEEventPtr *) malloc (sizeof (WinIMEEventRec));
 	  if (!pHead ||
 	      !AddResource (eventResource, EventType, (pointer)pHead))
 	    {
@@ -548,7 +549,7 @@ ProcWinIMESelectInput (register ClientPtr client)
 		pNewEvent->next = pEvent->next;
 	      else
 		*pHead = pEvent->next;
-	      xfree (pEvent);
+	      free (pEvent);
 	      updateEventMask (pHead);
 	    }
 	}
@@ -911,7 +912,8 @@ winWinIMESendEvent (int type, unsigned int mask, int kind, int arg, int context)
   ErrorF ("%s %d %d %d %d\n",
 	  __FUNCTION__, type, mask, kind, arg);
 #endif
-  pHead = (WinIMEEventPtr *) LookupIDByType(eventResource, EventType);
+  dixLookupResourceByType((pointer *)&pHead, eventResource, EventType,
+		  NullClient, DixUnknownAccess);
   if (!pHead)
     return;
   for (pEvent = *pHead; pEvent; pEvent = pEvent->next)
@@ -1013,7 +1015,7 @@ SProcWinIMEDispatch (register ClientPtr client)
 #endif
 
   /* It is bound to be non-local when there is byte swapping */
-  if (!LocalClient(client))
+  if (!ComputeLocalClient(client))
     return WinIMEErrorBase + WinIMEClientNotLocal;
 
   /* only local clients are allowed access */

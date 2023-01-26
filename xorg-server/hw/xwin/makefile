@@ -1,5 +1,9 @@
 LIBRARY = libXWin
 
+DEFINES+=	WIN32
+
+LINKLIBS+=	$(MHMAKECONF)\libX11\$(NOSERVOBJDIR)\libX11.lib
+
 XWIN_GLX_WINDOWS=1       # everything is in the glx makefile
 
 if XWIN_GLX_WINDOWS
@@ -14,6 +18,11 @@ SRCS_XV = \
 	winvideo.c
 DEFS_XV = -DXWIN_XV
 endif
+
+SRCS_WINIME = \
+	winic.c \
+	winime.c \
+	winimserver.c
 
 SRCS =	InitInput.c \
 	InitOutput.c \
@@ -79,7 +88,8 @@ SRCS =	InitInput.c \
 	winSetAppUserModelID.c \
 	winrandr.c \
 	$(SRCS_XV) \
-	xdmcphostselect.c
+	xdmcphostselect.c \
+	$(SRCS_WINIME)
 
 CSRCS=$(filter %.c,$(SRCS)) $(filter %.y,$(SRCS)) $(filter %.l,$(SRCS))
 CSRCS := $(CSRCS:%.y=%.c)
@@ -88,9 +98,9 @@ CSRCS := $(CSRCS:%.l=%.c)
  DEFS = $(DEFS_GLX_WINDOWS) \
 	$(DEFS_XV)
 
-DEFINES += $(DEFS:-D%=%) HAVE_XWIN_CONFIG_H PTW32_STATIC_LIB RELOCATE_PROJECTROOT READ_FONTDIRS PIXMAN_API=
+DEFINES += $(DEFS:-D%=%) HAVE_XWIN_CONFIG_H PTW32_STATIC_LIB RELOCATE_PROJECTROOT READ_FONTDIRS PIXMAN_API= XWIN_IMSERVER LIB11_DLL
 
-INCLUDES += winclipboard ..\.. ..\..\miext\rootless
+INCLUDES += winclipboard ..\.. ..\..\miext\rootless ..\..\winime
 
 INCLUDES += $(OBJDIR)
 

@@ -277,7 +277,11 @@ winConfigKeyboard(DeviceIntPtr pDevice)
 
         layoutNum = strtoul(layoutName, (char **) NULL, 16);
         if ((layoutNum & 0xffff) == 0x411) {
-            if (keyboardType == 7) {
+            if ((keyboardType == 7)
+#ifdef XWIN_IMSERVER
+		&& !g_fIME
+#endif
+	       ) {
                 /* Japanese layouts have problems with key event messages
                    such as the lack of WM_KEYUP for Caps Lock key.
                    Loading US layout fixes this problem. */

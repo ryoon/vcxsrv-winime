@@ -960,6 +960,9 @@ winHandleIconMessage(HWND hwnd, UINT message,
 LRESULT CALLBACK
 winWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+void
+winProcessMessage (LPMSG lpMsg);
+
 /*
  * winwindowswm.c
  */
@@ -978,6 +981,38 @@ void
 
 Bool
  winInitCursor(ScreenPtr pScreen);
+
+#ifdef XWIN_IMSERVER
+/*
+ * winime.c
+ */
+
+void
+winWinIMEExtensionInit ();
+
+void
+winWinIMESendEvent (int type, unsigned int mask, int kind, int arg, int context);
+
+int
+winHIMCtoContext (DWORD hIMC);
+
+void
+winCommitCompositionResult (int nContext, int nIndex, void *pData, int nLen);
+
+Bool
+winHIMCCompositionDraw(DWORD hIMC);
+
+LRESULT
+winIMEMessageHandler (HWND hwnd, UINT message,
+		      WPARAM wParam, LPARAM lParam);
+
+/*
+ * winimserver.c
+ */
+
+Bool
+winInitImServer ();
+#endif
 
 /*
  * winprocarg.c

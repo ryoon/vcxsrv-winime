@@ -356,6 +356,18 @@ winFinishScreenInitFB(int i, ScreenPtr pScreen, int argc, char **argv)
         pScreen->CreateScreenResources = winCreateScreenResources;
     }
 
+#ifdef XWIN_IMSERVER
+    if (g_fIME) {
+        winWinIMEExtensionInit ();
+
+        /* Initialize XIM server */
+        if (!winInitImServer()) {
+            ErrorF ("winFinishScreenInitFB - winInitImServer () failed.\n");
+            return FALSE;
+        }
+    }
+#endif
+
     /* Handle rootless mode */
     if (pScreenInfo->fRootless) {
         /* Define the WRAP macro temporarily for local use */

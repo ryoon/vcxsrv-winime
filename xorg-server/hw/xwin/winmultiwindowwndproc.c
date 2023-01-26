@@ -47,6 +47,15 @@
 #include "winmsg.h"
 #include "inputstr.h"
 #include <dwmapi.h>
+#if CYGDEBUG
+#include "winmessages.h"
+#endif
+#ifdef XWIN_IMSERVER
+#define _WINIME_SERVER_
+#include "winime.h"
+#include "winimestr.h"
+#include <imm.h>
+#endif
 
 #ifndef WM_DWMCOMPOSITIONCHANGED
 #define WM_DWMCOMPOSITIONCHANGED 0x031e
@@ -478,6 +487,34 @@ winAdjustXWindowState(winPrivScreenPtr s_pScreenPriv, winWMMessageRec *wmMsg)
     }
 }
 
+char*
+WideToUTF8(int iUnicodeSize, wchar_t *pwszUnicodeStr, int *pLen)
+{
+    char			*pszUTF8 = NULL;
+
+    /* Convert to UTF8 */
+    *pLen = WideCharToMultiByte (CP_UTF8,
+				 0,
+				 (LPCWSTR)pwszUnicodeStr,
+				 iUnicodeSize/2,
+				 NULL,
+				 0,
+				 NULL,
+				 NULL);
+    pszUTF8 = (char *) malloc (*pLen+1);
+    WideCharToMultiByte (CP_UTF8,
+			 0,
+			 (LPCWSTR)pwszUnicodeStr,
+			 iUnicodeSize/2,
+			 pszUTF8,
+			 *pLen,
+			 NULL,
+			 NULL);
+    pszUTF8[*pLen] = '\0';
+
+    return pszUTF8;
+}
+
 /*
  * winTopLevelWindowProc - Window procedure for all top-level Windows windows.
  */
@@ -552,6 +589,10 @@ winTopLevelWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
     /* Branch on message type */
     switch (message) {
     case WM_CREATE:
+#ifdef XWIN_IMSERVER
+	/* Disable IME by default */
+	ImmAssociateContext (hwnd, (HIMC) NULL);
+#endif
         /*
          * Make X windows' Z orders sync with Windows windows because
          * there can be AlwaysOnTop windows overlapped on the window
@@ -897,6 +938,12 @@ winTopLevelWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_SYSKEYDOWN:
     case WM_KEYDOWN:
+#ifdef XWIN_IMSERVER
+	/*
+	 * Ignore IME process key
+	 */
+	if (wParam == VK_PROCESSKEY) break;
+#endif
 
         /*
          * Don't pass Alt-F4 key combo to root window,
@@ -952,6 +999,12 @@ winTopLevelWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_SYSKEYUP:
     case WM_KEYUP:
+#ifdef XWIN_IMSERVER
+	/*
+	 * Ignore IME process key
+	 */
+	if (wParam == VK_PROCESSKEY) break;
+#endif
 
         /* Pass the message to the root window */
         return winWindowProc(hwndScreen, message, wParam, lParam);
@@ -1235,6 +1288,17 @@ winTopLevelWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         CheckForAlpha(hwnd, pWin, s_pScreenInfo);
 
         return 0;
+
+#ifdef XWIN_IMSERVER
+    case WM_IME_NOTIFY:
+    case WM_IME_STARTCOMPOSITION:
+    case WM_IME_COMPOSITION:
+    case WM_IME_ENDCOMPOSITION:
+    case WM_IME_CHAR:
+    case WM_CHAR:
+	return winIMEMessageHandler (hwnd, message, wParam, lParam);
+#endif
+
     default:
         break;
     }

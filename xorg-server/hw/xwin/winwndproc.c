@@ -48,6 +48,15 @@
 #define XKB_IN_SERVER
 #endif
 #include <xkbsrv.h>
+#if CYGDEBUG
+#include "winmessages.h"
+#endif
+#ifdef XWIN_IMSERVER
+#define _WINIME_SERVER_
+#include "winime.h"
+#include "winimestr.h"
+#include <imm.h>
+#endif
 
 /*
  * Global variables
@@ -220,6 +229,11 @@ winWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             winInitNotifyIcon(s_pScreenPriv,FALSE);
         }
+
+#ifdef XWIN_IMSERVER
+        /* Disable IME by default */
+        ImmAssociateContext (hwnd, (HIMC) NULL);
+#endif
         return 0;
 
     case WM_DISPLAYCHANGE:
@@ -1062,6 +1076,14 @@ winWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
             return 0;
         }
 
+#ifdef XWIN_IMSERVER
+        /*
+         * Ignore IME process key
+         */
+        if (wParam == VK_PROCESSKEY) return 0;
+#endif
+
+
         /* Discard fake Ctrl_L events that precede AltGR on non-US keyboards */
         if (winIsFakeCtrl_L(message, wParam, lParam))
             return 0;
@@ -1104,6 +1126,13 @@ winWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         /* Ignore the fake Ctrl_L that follows an AltGr release */
         if (winIsFakeCtrl_L(message, wParam, lParam))
             return 0;
+
+#ifdef XWIN_IMSERVER
+        /*
+         * Ignore IME process key
+         */
+        if (wParam == VK_PROCESSKEY) return 0;
+#endif
 
         /* Enqueue a keyup event */
         iScanCode = winTranslateKey(wParam, lParam);
@@ -1240,6 +1269,16 @@ winWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
 
+#ifdef XWIN_IMSERVER
+    case WM_IME_NOTIFY:
+    case WM_IME_STARTCOMPOSITION:
+    case WM_IME_COMPOSITION:
+    case WM_IME_ENDCOMPOSITION:
+    case WM_IME_CHAR:
+    case WM_CHAR:
+        return winIMEMessageHandler (hwnd, message, wParam, lParam);
+#endif
+
     default:
         if ((message == s_uTaskbarRestart) && !s_pScreenInfo->fNoTrayIcon)  {
             winInitNotifyIcon(s_pScreenPriv,FALSE);
@@ -1248,4 +1287,27 @@ winWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     return DefWindowProc(hwnd, message, wParam, lParam);
+}
+
+void
+winProcessMessage (LPMSG lpMsg) {
+#if 0
+    if (lpMsg->message == WM_KEYUP || lpMsg->message == WM_KEYDOWN) {
+        winDebug("winProcessMessage %d\n", GetTickCount());
+        winDebug("msg:0x%02x wParam:0x%04x time:%d", lpMsg->message, lpMsg->wParam, lpMsg->time);
+        winDebug("lParam:count(0x%04x) scancode(0x%02x) flag(0x%x,0x%x,0x%x,0x%x)\n",
+                 LOWORD (lpMsg->lParam),
+                 LOBYTE (HIWORD (lpMsg->lParam)),
+                 (HIBYTE (HIWORD (lpMsg->lParam)) & 0x01) >> 0,
+                 (HIBYTE (HIWORD (lpMsg->lParam)) & 0x20) >> 5,
+                 (HIBYTE (HIWORD (lpMsg->lParam)) & 0x40) >> 6,
+                 (HIBYTE (HIWORD (lpMsg->lParam)) & 0x80) >> 7);
+    }
+#endif
+#ifdef XWIN_IMSERVER
+    if (g_fIME) {
+        TranslateMessage(lpMsg);
+    }
+#endif
+    DispatchMessage (lpMsg);
 }

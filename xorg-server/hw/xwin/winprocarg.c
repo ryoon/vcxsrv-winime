@@ -925,6 +925,16 @@ ddxProcessArgument(int argc, char *argv[], int i)
         return 1;
     }
 
+#ifdef XWIN_IMSERVER
+    /*
+     * Look for the '-no-ime' argument
+     */
+    if (IS_OPTION ("-no-ime")) {
+        g_fIME = FALSE;
+        return 1;
+    }
+#endif
+
     /*
      * Look for the '-fp' argument
      */

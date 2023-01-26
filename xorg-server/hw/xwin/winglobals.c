@@ -106,6 +106,13 @@ const char WIN_NEEDMANAGE_PROP[]= "vcxsrv_override_redirect_prop_rl";
 const char WIN_STATE_PROP[]=      "vcxsrv_state_prop_rl";
 const char WIN_SCR_PROP[]=        "vcxsrv_screen_prop_rl";
 
+#ifdef XWIN_IMSERVER
+/*
+ * IME variables
+ */
+Bool			g_fIME = TRUE;
+#endif
+
 /*
  * Re-initialize global variables that are invalidated
  * by a server reset.

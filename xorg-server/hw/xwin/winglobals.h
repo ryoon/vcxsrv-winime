@@ -64,6 +64,8 @@ extern HWND g_hDlgDepthChange;
 extern HWND g_hDlgExit;
 extern HWND g_hDlgAbout;
 
+extern Bool g_fIME;
+
 extern Bool g_fSoftwareCursor;
 extern Bool g_fCursor;
 

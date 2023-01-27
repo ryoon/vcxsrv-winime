@@ -942,7 +942,7 @@ winTopLevelWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	/*
 	 * Ignore IME process key
 	 */
-	if (wParam == VK_PROCESSKEY) break;
+	if (wParam == VK_PROCESSKEY) return 0;
 #endif
 
         /*
@@ -1003,7 +1003,7 @@ winTopLevelWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	/*
 	 * Ignore IME process key
 	 */
-	if (wParam == VK_PROCESSKEY) break;
+	if (wParam == VK_PROCESSKEY) return 0;
 #endif
 
         /* Pass the message to the root window */

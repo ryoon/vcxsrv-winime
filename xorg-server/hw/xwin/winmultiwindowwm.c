@@ -1379,8 +1379,9 @@ winMultiWindowXMsgProc(void *pArg)
         if (type == 0) {
             const char *extension;
             xcb_generic_error_t *err = (xcb_generic_error_t *)event;
-            ErrorF("winMultiWindowWMProc - Error code: %i (%s), ID: 0x%08x, "
+            ErrorF("%s - Error code: %i (%s), ID: 0x%08x, "
                 "Major opcode: %i (%s), Minor opcode: %i (%s)\n",
+                __FUNCTION__,
                 err->error_code,
                 xcb_errors_get_name_for_error(pProcArg->err_ctx, err->error_code, &extension),
                 err->resource_id,

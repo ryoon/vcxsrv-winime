@@ -1092,6 +1092,7 @@ winIMEMessageHandler (HWND hwnd, UINT message,
 	    wchar_t		*pwszUnicodeStr = NULL;
 	    char		*pszUTF8 = NULL;
 	    int			nUTF8;
+	    int			nLen;
 
 	    /* Get result */
 	    nUnicodeSize = ImmGetCompositionStringW(hIMC, GCS_COMPSTR, NULL, 0);
@@ -1099,10 +1100,27 @@ winIMEMessageHandler (HWND hwnd, UINT message,
 	    ImmGetCompositionStringW(hIMC, GCS_COMPSTR, pwszUnicodeStr, nUnicodeSize);
 
 	    /* Convert to UTF8 */
-	    pszUTF8 = WideToUTF8 (nUnicodeSize, pwszUnicodeStr, &nUTF8);
+	    nLen = WideCharToMultiByte (CP_UTF8,
+                                 0,
+                                 (LPCWSTR)pwszUnicodeStr,
+                                 nUnicodeSize/2,
+                                 NULL,
+                                 0,
+                                 NULL,
+                                 NULL);
+	    pszUTF8 = (char *) malloc (nLen+1);
+	    WideCharToMultiByte (CP_UTF8,
+                         0,
+                         (LPCWSTR)pwszUnicodeStr,
+                         nUnicodeSize/2,
+                         pszUTF8,
+                         nLen,
+                         NULL,
+                         NULL);
+            pszUTF8[nLen] = '\0';
 	    free (pwszUnicodeStr);
 
-	    winCommitCompositionResult (winHIMCtoContext(hIMC), GCS_COMPSTR, pszUTF8, nUTF8);
+	    winCommitCompositionResult (winHIMCtoContext(hIMC), GCS_COMPSTR, pszUTF8, nLen);
 
 	    winWinIMESendEvent (WinIMEControllerNotify,
 				WinIMENotifyMask,
@@ -1130,6 +1148,7 @@ winIMEMessageHandler (HWND hwnd, UINT message,
 	    wchar_t		*pwszUnicodeStr = NULL;
 	    char		*pszUTF8 = NULL;
 	    int			nUTF8;
+	    int			nLen;
 
 	    /* Get result */
 	    nUnicodeSize = ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, NULL, 0);
@@ -1137,10 +1156,27 @@ winIMEMessageHandler (HWND hwnd, UINT message,
 	    ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, pwszUnicodeStr, nUnicodeSize);
 
 	    /* Convert to UTF8 */
-	    pszUTF8 = WideToUTF8 (nUnicodeSize, pwszUnicodeStr, &nUTF8);
+            nLen = WideCharToMultiByte (CP_UTF8,
+                                 0,
+                                 (LPCWSTR)pwszUnicodeStr,
+                                 nUnicodeSize/2,
+                                 NULL,
+                                 0,
+                                 NULL,
+                                 NULL);
+            pszUTF8 = (char *) malloc (nLen+1);
+            WideCharToMultiByte (CP_UTF8,
+                         0,
+                         (LPCWSTR)pwszUnicodeStr,
+                         nUnicodeSize/2,
+                         pszUTF8,
+                         nLen,
+                         NULL,
+                         NULL);
+            pszUTF8[nLen] = '\0';
 	    free (pwszUnicodeStr);
 
-	    winCommitCompositionResult (winHIMCtoContext(hIMC), GCS_RESULTSTR, pszUTF8, nUTF8);
+	    winCommitCompositionResult (winHIMCtoContext(hIMC), GCS_RESULTSTR, pszUTF8, nLen);
 
 	    winWinIMESendEvent (WinIMEControllerNotify,
 				WinIMENotifyMask,

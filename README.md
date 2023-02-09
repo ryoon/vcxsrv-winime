@@ -12,7 +12,7 @@ $ xterm &
 $ firefox &
 ```
 
-![xterm](xterm-winime-xim-screenshot.png)
+![xterm with CorvusSKK](xterm-winime-xim-screenshot.png)
 
 ## How to build
 

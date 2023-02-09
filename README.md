@@ -29,6 +29,7 @@ $ firefox &
 ** Packages: lxml, mako
 
 ### How to build
+```
 > mkdir vcxsrv
 > cd vcxsrv
 > git init
@@ -39,6 +40,7 @@ $ firefox &
 > export SHELLOPTS
 > set -o igncr
 > ./buildall.cmd 1 5 R
+```
 
 x86_64 release build will begin.
 

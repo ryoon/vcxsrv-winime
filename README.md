@@ -61,4 +61,4 @@ Create the Windows shortcut as follows:
 
 
 # How to download
-(vcxsrv-64.1.20.14.0-winime.installer.exe)[https://www.ryoon.net/~ryoon/vcxsrv-winime/vcxsrv-64.1.20.14.0-winime.installer.exe]
+[vcxsrv-64.1.20.14.0-winime.installer.exe](https://www.ryoon.net/~ryoon/vcxsrv-winime/vcxsrv-64.1.20.14.0-winime.installer.exe)

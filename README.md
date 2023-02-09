@@ -20,13 +20,13 @@ $ firefox &
 
 * Git for Windows
 * Cygwin 3.3 (with 3.4, Strawberry Perl fails silently)
- * Packages: bison, flex, gawk, gperf, gzip, nasm, sed, python27, python38, python38-lxml
+  * Packages: bison, flex, gawk, gperf, gzip, nasm, sed, python27, python38, python38-lxml
 * Visual Studio Community 2022
 * Strawberry Perl Portable edition
- * Install under C:\perl
+  * Install under C:\perl
 * Python 3.9 for Windows
- * Install under c:\Python39
- * Packages: lxml, mako
+  * Install under c:\Python39
+  * Packages: lxml, mako
 
 ### How to build
 ```

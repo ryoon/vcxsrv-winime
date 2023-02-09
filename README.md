@@ -62,3 +62,8 @@ Create the Windows shortcut as follows:
 
 # How to download
 [vcxsrv-64.1.20.14.0-winime.installer.exe](https://www.ryoon.net/~ryoon/vcxsrv-winime/vcxsrv-64.1.20.14.0-winime.installer.exe)
+
+
+# Acknowledgments
+Great thanks to the original author, zakki.
+You can get the original patches from [peppermint.jp](http://www.peppermint.jp/products/asis/).

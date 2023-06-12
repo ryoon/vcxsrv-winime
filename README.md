@@ -29,17 +29,24 @@ $ firefox &
   * Packages: lxml, mako
 
 ### How to build
+In Git for Windows's Git Bash window:
+XXX: To avoid a short path name problem, use `vcxsrv` as directory name.
 ```
-> mkdir vcxsrv
-> cd vcxsrv
+> mkdir /c/repos/vcxsrv
+> cd /c/repos/vcxsrv
 > git init
 > git config core.autocrlf false
-> git remote add origin git@github.com:ryoon/vcxsrv.git
+> git remote add origin git@github.com:ryoon/vcxsrv-winime.git
 > git pull origin winime-xim
 > git switch winime-xim
+```
+
+In Cygwin Terminal:
+```
+> cd /dygdrive/c/vcxsrv
 > export SHELLOPTS
 > set -o igncr
-> ./buildall.cmd 1 5 R
+> ./buildall.sh 1 5 R
 ```
 
 x86_64 release build will begin.
@@ -61,7 +68,7 @@ Create the Windows shortcut as follows:
 
 
 # How to download
-[vcxsrv-64.1.20.14.0-winime.installer.exe](https://www.ryoon.net/~ryoon/vcxsrv-winime/vcxsrv-64.1.20.14.0-winime.installer.exe)
+[vcxsrv-64.1.20.14.0-winime.installer-20230612.exe](https://www.ryoon.net/~ryoon/vcxsrv-winime/vcxsrv-64.1.20.14.0-winime.installer-20230612.exe)
 
 
 # Acknowledgments

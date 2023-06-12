@@ -44,7 +44,7 @@ XXX: To avoid a short path name problem, use `vcxsrv` as directory name.
 
 In Cygwin Terminal:
 ```
-> cd /dygdrive/c/vcxsrv
+> cd /cygdrive/c/vcxsrv
 > export SHELLOPTS
 > set -o igncr
 > ./buildall.sh 1 5 R

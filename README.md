@@ -30,6 +30,7 @@ $ firefox &
 
 ### How to build
 In Git for Windows's Git Bash window:
+
 XXX: To avoid a short path name problem, use `vcxsrv` as directory name.
 ```
 > mkdir /c/repos/vcxsrv
